@@ -261,7 +261,7 @@ actual object PanoNotifications {
                 AndroidStuff.updateCurrentOrImmutable
             )
             val toggleTtsAction = buildNotificationAction(
-                if (prefs.announceTrackWithTts) R.drawable.vd_block else R.drawable.vd_unblock,
+                if (prefs.announceTrackWithTts) R.drawable.vd_remove else R.drawable.vd_mic,
                 if (prefs.announceTrackWithTts) "🔇" else "🔊",
                 getString(if (prefs.announceTrackWithTts) Res.string.tts_off else Res.string.tts_on),
                 toggleTtsPi
