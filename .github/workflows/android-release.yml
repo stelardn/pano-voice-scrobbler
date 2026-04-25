@@ -50,8 +50,8 @@ jobs:
 
       - name: Configure signing and local properties
         run: |
-          echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
-          echo "${{ secrets.ANDROID_KEYSTORE_JKS }}" | base64 -d > androidApp/android-keystore.jks
+          printf "%s" "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
+          printf "%s" "${{ secrets.ANDROID_KEYSTORE_JKS }}" | tr -d "\r\n" | base64 --decode > androidApp/android-keystore.jks
 
       - name: Read release metadata
         id: release_metadata
