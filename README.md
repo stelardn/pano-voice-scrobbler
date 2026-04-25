@@ -1,8 +1,21 @@
-## <img src="composeApp/src/desktopMain/composeResources/drawable/ic_launcher_with_bg.svg" alt="app icon" width="32"/> Pano Scrobbler
+## <img src="composeApp/src/desktopMain/composeResources/drawable/ic_launcher_with_bg.svg" alt="app icon" width="32"/> Pano Voice Scrobbler
 
-[\[repository\]](https://github.com/kawaiiDango/pano-scrobbler)
+[\[repository\]](https://github.com/stelardn/pano-voice-scrobbler)
 
 <img src="desktop-screenshots/1-scrobbles-desktop.jpg" alt="scrobbles screen" width="250"/> <img src="desktop-screenshots/2-charts-desktop.jpg" alt="charts screen" width="250"/>
+
+
+> **Pano Voice Scrobbler** is a fork of Pano Scrobbler focused on accessibility and hands-free listening.
+>
+> It adds configurable **Android text-to-speech (TTS) announcements** for now-playing tracks, so you can hear
+> track metadata (song, artist, and album) when music changes.
+
+### What is different in this fork?
+
+- Optional spoken announcements when a new track starts (Android native TTS)
+- Configurable spoken content (song, artist, album)
+- Configurable audio integration mode for announcements (mix or duck)
+- Quick enable/disable action from the now-playing notification
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3-friends-mobile.jpg" alt="friends screen" width="150"/> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4-details-mobile.jpg" alt="details screen" width="150"/>
 
@@ -59,6 +72,10 @@ you automatic updates.
 
 ## [FAQ](faq.md) • [Privacy](privacy-policy.md) • [Compiling](instructions.md)
 
+### Fork highlights
+
+In addition to upstream capabilities, this fork includes configurable Android TTS track announcements.
+
 ### Features:
 
 #### For all platforms (Windows, Linux, Android, Android TV):
@@ -88,7 +105,7 @@ you automatic updates.
 - Collage generator
 - Add or remove personal tags from the info screen
 - Edit or delete existing scrobbles. Remembers edits
-- Control Pano Scrobbler from automation apps on Android or command-line on desktop
+- Control Pano Voice Scrobbler from automation apps on Android or command-line on desktop
 
 #### Android only (except TV):
 
@@ -125,5 +142,5 @@ This project is not affiliated with Last.fm, Libre.fm, ListenBrainz or any other
 
 SPDX-License-Identifier: GPL-3.0-or-later
 
-Pano Scrobbler is licensed under
+Pano Voice Scrobbler is licensed under
 the [GNU General Public License v3 or later](http://www.gnu.org/copyleft/gpl.html).
