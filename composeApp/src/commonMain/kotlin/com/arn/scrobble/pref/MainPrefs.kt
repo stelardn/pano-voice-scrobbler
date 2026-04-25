@@ -56,6 +56,11 @@ data class MainPrefs(
     val linkHeartButtonToRating: Boolean = false,
     val preventDuplicateAmbientScrobbles: Boolean = false,
     val submitNowPlaying: Boolean = true,
+    val announceTrackWithTts: Boolean = false,
+    val announceTtsIncludeTrack: Boolean = true,
+    val announceTtsIncludeArtist: Boolean = true,
+    val announceTtsIncludeAlbum: Boolean = false,
+    val announceTtsAudioFocus: TtsAudioFocus = TtsAudioFocus.NONE,
     val fetchAlbum: Boolean = false,
     val searchInSource: Boolean = false,
     val firstDayOfWeek: Int = -1,
@@ -163,6 +168,11 @@ data class MainPrefs(
         val minDurationSecs: Int = defaultMainPrefs.minDurationSecs,
         @JsonNames("now_playing")
         val submitNowPlaying: Boolean = defaultMainPrefs.submitNowPlaying,
+        val announceTrackWithTts: Boolean = defaultMainPrefs.announceTrackWithTts,
+        val announceTtsIncludeTrack: Boolean = defaultMainPrefs.announceTtsIncludeTrack,
+        val announceTtsIncludeArtist: Boolean = defaultMainPrefs.announceTtsIncludeArtist,
+        val announceTtsIncludeAlbum: Boolean = defaultMainPrefs.announceTtsIncludeAlbum,
+        val announceTtsAudioFocus: TtsAudioFocus = defaultMainPrefs.announceTtsAudioFocus,
         @JsonNames("fetch_album")
         val fetchAlbum: Boolean = defaultMainPrefs.fetchAlbum,
         @JsonNames("auto_detect")
@@ -254,6 +264,11 @@ data class MainPrefs(
         delaySecs = prefs.delaySecs.coerceIn(PREF_DELAY_SECS_MIN, PREF_DELAY_SECS_MAX),
         delayPercent = prefs.delayPercent.coerceIn(PREF_DELAY_PER_MIN, PREF_DELAY_PER_MAX),
         submitNowPlaying = prefs.submitNowPlaying,
+        announceTrackWithTts = prefs.announceTrackWithTts,
+        announceTtsIncludeTrack = prefs.announceTtsIncludeTrack,
+        announceTtsIncludeArtist = prefs.announceTtsIncludeArtist,
+        announceTtsIncludeAlbum = prefs.announceTtsIncludeAlbum,
+        announceTtsAudioFocus = prefs.announceTtsAudioFocus,
         fetchAlbum = prefs.fetchAlbum,
         autoDetectApps = prefs.autoDetectApps,
         showScrobbleSources = prefs.showScrobbleSources,
@@ -286,6 +301,11 @@ data class MainPrefs(
         delayPercent = delayPercentP,
         minDurationSecs = minDurationSecsP,
         submitNowPlaying = submitNowPlaying,
+        announceTrackWithTts = announceTrackWithTts,
+        announceTtsIncludeTrack = announceTtsIncludeTrack,
+        announceTtsIncludeArtist = announceTtsIncludeArtist,
+        announceTtsIncludeAlbum = announceTtsIncludeAlbum,
+        announceTtsAudioFocus = announceTtsAudioFocus,
         fetchAlbum = fetchAlbum,
         autoDetectApps = autoDetectApps,
         showScrobbleSources = showScrobbleSources,
@@ -348,4 +368,10 @@ data class MainPrefs(
             MainPrefsMigration6(),
         )
     }
+}
+
+@Serializable
+enum class TtsAudioFocus {
+    NONE,
+    DUCK,
 }
