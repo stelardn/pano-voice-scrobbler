@@ -47,6 +47,8 @@ import pano_scrobbler.composeapp.generated.resources.no
 import pano_scrobbler.composeapp.generated.resources.num_scrobbles_noti
 import pano_scrobbler.composeapp.generated.resources.state_unscrobbled
 import pano_scrobbler.composeapp.generated.resources.tap_to_edit
+import pano_scrobbler.composeapp.generated.resources.tts_off
+import pano_scrobbler.composeapp.generated.resources.tts_on
 import pano_scrobbler.composeapp.generated.resources.unlove
 import pano_scrobbler.composeapp.generated.resources.update_available
 import pano_scrobbler.composeapp.generated.resources.yes
@@ -119,6 +121,16 @@ actual object PanoNotifications {
     }
 
     actual suspend fun notifyScrobble(event: PlayingTrackNotifyEvent.TrackPlaying) {
+        val prefs = PlatformStuff.mainPrefs.data.first()
+
+        if (event.nowPlaying) {
+            TrackAnnouncementTts.maybeSpeak(
+                scrobbleData = event.scrobbleData,
+                hash = event.hash,
+                prefs = prefs,
+            )
+        }
+
         if (event.nowPlaying)
             nowPlayingScrobbleDataToHash[event.notiKey] =
                 event.origScrobbleData to event.hash
@@ -176,8 +188,7 @@ actual object PanoNotifications {
             .setPriority(Notification.PRIORITY_LOW)
             .setStyle(style)
             .apply {
-                val user =
-                    PlatformStuff.mainPrefs.data.map { it.currentAccount?.user }.first()
+                val user = prefs.currentAccount?.user
                 if (user != null) {
                     val dialogArgs = PanoRoute.Modal.MusicEntryInfo(
                         track = event.scrobbleData.toTrack(),
@@ -239,9 +250,27 @@ actual object PanoNotifications {
                 cancelToastIntent
             )
 
+            val toggleTtsIntent = PlayingTrackEventReceiver.createIntent(
+                context,
+                PlayingTrackNotifyEvent.TtsAnnouncementsEnabled(!prefs.announceTrackWithTts)
+            )
+            val toggleTtsPi = PendingIntent.getBroadcast(
+                context,
+                6,
+                toggleTtsIntent,
+                AndroidStuff.updateCurrentOrImmutable
+            )
+            val toggleTtsAction = buildNotificationAction(
+                if (prefs.announceTrackWithTts) R.drawable.vd_block else R.drawable.vd_unblock,
+                if (prefs.announceTrackWithTts) "🔇" else "🔊",
+                getString(if (prefs.announceTrackWithTts) Res.string.tts_off else Res.string.tts_on),
+                toggleTtsPi
+            )
+
             nb.addAction(cancelAction)
             nb.addAction(editAction)
             nb.addAction(loveAction)
+            nb.addAction(toggleTtsAction)
             style.setShowActionsInCompactView(0, 1, 2)
         } else {
             val blockedMetadata = BlockedMetadata(

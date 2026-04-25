@@ -40,6 +40,12 @@ class PlayingTrackEventReceiver : BroadcastReceiver() {
                 }
             }
 
+            PlayingTrackNotifyEvent.TtsAnnouncementsEnabled::class.simpleName -> {
+                eventStr.let {
+                    Stuff.myJson.decodeFromString<PlayingTrackNotifyEvent.TtsAnnouncementsEnabled>(it)
+                }
+            }
+
             else -> {
                 Logger.e {
                     "Unknown PlayingTrackNotifyEvent type: $eventType, eventStr: $eventStr"
