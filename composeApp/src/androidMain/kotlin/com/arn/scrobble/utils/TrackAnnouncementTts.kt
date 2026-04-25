@@ -14,9 +14,14 @@ import com.arn.scrobble.pref.TtsAudioFocus
 import java.util.Locale
 
 object TrackAnnouncementTts {
+    private data class PendingAnnouncement(
+        val text: String,
+        val audioFocus: TtsAudioFocus,
+    )
+
     private var textToSpeech: TextToSpeech? = null
     private var isInitialized = false
-    private var pendingText: String? = null
+    private var pendingAnnouncement: PendingAnnouncement? = null
     private var lastAnnouncedHash: Int? = null
     private var audioFocusRequest: AudioFocusRequest? = null
 
@@ -52,7 +57,7 @@ object TrackAnnouncementTts {
         val context = AndroidStuff.applicationContext
         val tts = getOrInit(context)
         if (!isInitialized || tts == null) {
-            pendingText = text
+            pendingAnnouncement = PendingAnnouncement(text, audioFocus)
             return
         }
 
@@ -73,9 +78,9 @@ object TrackAnnouncementTts {
                     return@TextToSpeech
                 }
 
-                pendingText?.let {
-                    pendingText = null
-                    textToSpeech?.speak(it, TextToSpeech.QUEUE_FLUSH, null, "track_announcement")
+                pendingAnnouncement?.let {
+                    pendingAnnouncement = null
+                    speak(it.text, it.audioFocus)
                 }
             }.also {
                 it.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
