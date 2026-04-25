@@ -111,6 +111,13 @@ import pano_scrobbler.composeapp.generated.resources.pref_locale
 import pano_scrobbler.composeapp.generated.resources.pref_misc
 import pano_scrobbler.composeapp.generated.resources.pref_notify_updates
 import pano_scrobbler.composeapp.generated.resources.pref_now_playing
+import pano_scrobbler.composeapp.generated.resources.pref_tts_announce
+import pano_scrobbler.composeapp.generated.resources.pref_tts_audio
+import pano_scrobbler.composeapp.generated.resources.pref_tts_audio_duck
+import pano_scrobbler.composeapp.generated.resources.pref_tts_audio_mix
+import pano_scrobbler.composeapp.generated.resources.pref_tts_include_album
+import pano_scrobbler.composeapp.generated.resources.pref_tts_include_artist
+import pano_scrobbler.composeapp.generated.resources.pref_tts_include_track
 import pano_scrobbler.composeapp.generated.resources.pref_oss_credits
 import pano_scrobbler.composeapp.generated.resources.pref_personalization
 import pano_scrobbler.composeapp.generated.resources.pref_prevent_duplicate_ambient_scrobbles
@@ -175,6 +182,16 @@ fun PrefsScreen(
     mainPrefs.data.collectAsStateWithInitialValue { it.preventDuplicateAmbientScrobbles }
     val submitNowPlaying by
     mainPrefs.data.collectAsStateWithInitialValue { it.submitNowPlaying }
+    val announceTrackWithTts by
+    mainPrefs.data.collectAsStateWithInitialValue { it.announceTrackWithTts }
+    val announceTtsIncludeTrack by
+    mainPrefs.data.collectAsStateWithInitialValue { it.announceTtsIncludeTrack }
+    val announceTtsIncludeArtist by
+    mainPrefs.data.collectAsStateWithInitialValue { it.announceTtsIncludeArtist }
+    val announceTtsIncludeAlbum by
+    mainPrefs.data.collectAsStateWithInitialValue { it.announceTtsIncludeAlbum }
+    val announceTtsAudioFocus by
+    mainPrefs.data.collectAsStateWithInitialValue { it.announceTtsAudioFocus }
     val trayIconTheme by
     mainPrefs.data.collectAsStateWithInitialValue { it.trayIconTheme }
     val notiPersistent by
@@ -431,6 +448,68 @@ fun PrefsScreen(
                 text = title,
                 value = submitNowPlaying,
                 copyToSave = { copy(submitNowPlaying = it) }
+            )
+        }
+
+        filteredItem(MainPrefs::announceTrackWithTts.name, Res.string.pref_tts_announce) { title ->
+            SwitchPref(
+                text = title,
+                value = announceTrackWithTts,
+                copyToSave = { copy(announceTrackWithTts = it) }
+            )
+        }
+
+        filteredItem(
+            MainPrefs::announceTtsIncludeTrack.name,
+            Res.string.pref_tts_include_track
+        ) { title ->
+            SwitchPref(
+                text = title,
+                value = announceTtsIncludeTrack,
+                enabled = announceTrackWithTts,
+                copyToSave = { copy(announceTtsIncludeTrack = it) }
+            )
+        }
+
+        filteredItem(
+            MainPrefs::announceTtsIncludeArtist.name,
+            Res.string.pref_tts_include_artist
+        ) { title ->
+            SwitchPref(
+                text = title,
+                value = announceTtsIncludeArtist,
+                enabled = announceTrackWithTts,
+                copyToSave = { copy(announceTtsIncludeArtist = it) }
+            )
+        }
+
+        filteredItem(
+            MainPrefs::announceTtsIncludeAlbum.name,
+            Res.string.pref_tts_include_album
+        ) { title ->
+            SwitchPref(
+                text = title,
+                value = announceTtsIncludeAlbum,
+                enabled = announceTrackWithTts,
+                copyToSave = { copy(announceTtsIncludeAlbum = it) }
+            )
+        }
+
+        filteredItem(MainPrefs::announceTtsAudioFocus.name, Res.string.pref_tts_audio) { title ->
+            DropdownPref(
+                text = title,
+                selectedValue = announceTtsAudioFocus,
+                values = TtsAudioFocus.entries,
+                enabled = announceTrackWithTts,
+                toLabel = {
+                    stringResource(
+                        when (it) {
+                            TtsAudioFocus.NONE -> Res.string.pref_tts_audio_mix
+                            TtsAudioFocus.DUCK -> Res.string.pref_tts_audio_duck
+                        }
+                    )
+                },
+                copyToSave = { copy(announceTtsAudioFocus = it) }
             )
         }
 
@@ -992,4 +1071,3 @@ private data class TitleStringResource(
     val formatRes: StringResource?,
     var string: String? = null
 )
-

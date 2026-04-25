@@ -95,6 +95,11 @@ sealed interface PlayingTrackNotifyEvent {
         val appId: String,
         val allowed: Boolean,
     ) : PlayingTrackNotifyEvent
+
+    @Serializable
+    data class TtsAnnouncementsEnabled(
+        val enabled: Boolean,
+    ) : PlayingTrackNotifyEvent
 }
 
 val globalTrackEventFlow by lazy { MutableSharedFlow<PlayingTrackNotifyEvent>(extraBufferCapacity = 10) }
@@ -268,6 +273,14 @@ suspend fun listenForPlayingTrackEvents(
                 }
 
                 PanoNotifications.removeNotificationByKey(Stuff.CHANNEL_NOTI_NEW_APP)
+            }
+
+            is PlayingTrackNotifyEvent.TtsAnnouncementsEnabled -> {
+                PlatformStuff.mainPrefs.updateData { it.copy(announceTrackWithTts = event.enabled) }
+
+                mediaListener.findPlayingTracker()?.trackInfo?.let {
+                    globalTrackEventFlow.emit(it.toTrackPlayingEvent())
+                }
             }
         }
     }
