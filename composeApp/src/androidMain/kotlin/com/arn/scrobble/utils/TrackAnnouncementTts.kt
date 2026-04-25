@@ -71,10 +71,16 @@ object TrackAnnouncementTts {
         textToSpeech?.let { return it }
 
         return try {
+            var createdTextToSpeech: TextToSpeech? = null
+
             TextToSpeech(context) { status ->
                 isInitialized = status == TextToSpeech.SUCCESS
                 if (!isInitialized) {
                     Logger.e { "TTS init failed with status: $status" }
+                    if (textToSpeech === createdTextToSpeech) {
+                        textToSpeech = null
+                    }
+                    createdTextToSpeech?.shutdown()
                     return@TextToSpeech
                 }
 
@@ -83,6 +89,7 @@ object TrackAnnouncementTts {
                     speak(it.text, it.audioFocus)
                 }
             }.also {
+                createdTextToSpeech = it
                 it.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                     override fun onStart(utteranceId: String?) = Unit
 
@@ -98,6 +105,7 @@ object TrackAnnouncementTts {
                 textToSpeech = it
             }
         } catch (e: Exception) {
+            isInitialized = false
             Logger.e(e) { "Unable to initialize TextToSpeech" }
             null
         }
